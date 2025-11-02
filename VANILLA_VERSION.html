@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multipurpose Calculator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      transition: background 300ms ease;
+    }
+
+    body.dark {
+      background: linear-gradient(135deg, #0b272a 0%, #244747 50%, #0b272a 100%);
+    }
+
+    body.light {
+      background: linear-gradient(135deg, #dad7c5 0%, #f5f3eb 50%, #dad7c5 100%);
+    }
+
+    .container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .calculator {
+      width: 100%;
+      max-width: 28rem;
+      border-radius: 2rem;
+      padding: 1.5rem;
+      transition: all 300ms ease;
+    }
+
+    .dark .calculator {
+      background: #244747;
+      box-shadow: 0 8px 32px rgba(11, 39, 42, 0.5);
+    }
+
+    .light .calculator {
+      background: white;
+      box-shadow: 0 8px 32px rgba(123, 156, 146, 0.2);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-3d {
+      position: relative;
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.1),
+        0 2px 4px rgba(0, 0, 0, 0.06),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      user-select: none;
+      border: none;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .btn-3d:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 6px 12px rgba(0, 0, 0, 0.15),
+        0 3px 6px rgba(0, 0, 0, 0.1),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 2px 4px rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-3d:active {
+      transform: translateY(0) scale(0.97);
+      box-shadow:
+        inset 0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 -1px 2px rgba(255, 255, 255, 0.05),
+        0 1px 2px rgba(0, 0, 0, 0.05);
+      animation: ripple 0.4s ease-out;
+    }
+
+    @keyframes ripple {
+      0% {
+        box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0.3), inset 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+      50% {
+        box-shadow: inset 0 0 0 8px rgba(255, 255, 255, 0), inset 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+      100% {
+        box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0), inset 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    .theme-toggle {
+      width: 4rem;
+      height: 2rem;
+      border-radius: 9999px;
+      padding: 0.25rem;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .dark .theme-toggle {
+      background: #4e706b;
+    }
+
+    .light .theme-toggle {
+      background: #7b9c92;
+    }
+
+    .theme-thumb {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      background: #dad7c5;
+      transition: transform 300ms ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .light .theme-thumb {
+      transform: translateX(2rem);
+    }
+
+    .display {
+      padding: 1.5rem;
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .dark .display {
+      background: #0b272a;
+      color: #dad7c5;
+    }
+
+    .light .display {
+      background: #f5f3eb;
+      color: #244747;
+    }
+
+    .display-value {
+      font-size: 2rem;
+      font-weight: 300;
+      text-align: right;
+      min-height: 3rem;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+
+    .key {
+      padding: 1.25rem 0;
+      border-radius: 0.75rem;
+      font-size: 1.125rem;
+      min-height: 3.5rem;
+      min-width: 3.5rem;
+    }
+
+    .dark .key-number {
+      background: #244747;
+      color: #dad7c5;
+    }
+
+    .light .key-number {
+      background: white;
+      color: #244747;
+    }
+
+    .dark .key-operator {
+      background: #4e706b;
+      color: #dad7c5;
+    }
+
+    .light .key-operator {
+      background: #7b9c92;
+      color: white;
+    }
+
+    .dark .key-equals {
+      background: #7b9c92;
+      color: #0b272a;
+    }
+
+    .light .key-equals {
+      background: #244747;
+      color: #dad7c5;
+    }
+
+    .key-wide {
+      grid-column: span 2;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <div class="calculator">
+      <div class="header">
+        <h2 style="color: #7b9c92; font-size: 1.25rem; font-weight: 500;">Calculator</h2>
+        <button class="btn-3d theme-toggle" onclick="toggleTheme()">
+          <div class="theme-thumb">
+            <svg id="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#244747" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg id="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#244747" stroke-width="2" style="display: none;">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </div>
+        </button>
+      </div>
+
+      <div class="display">
+        <div class="display-value" id="display">0</div>
+      </div>
+
+      <div class="keypad">
+        <button class="btn-3d key key-operator" onclick="clear()">C</button>
+        <button class="btn-3d key key-operator" onclick="backspace()">←</button>
+        <button class="btn-3d key key-operator" onclick="operator('%')">%</button>
+        <button class="btn-3d key key-operator" onclick="operator('/')">÷</button>
+
+        <button class="btn-3d key key-number" onclick="number('7')">7</button>
+        <button class="btn-3d key key-number" onclick="number('8')">8</button>
+        <button class="btn-3d key key-number" onclick="number('9')">9</button>
+        <button class="btn-3d key key-operator" onclick="operator('*')">×</button>
+
+        <button class="btn-3d key key-number" onclick="number('4')">4</button>
+        <button class="btn-3d key key-number" onclick="number('5')">5</button>
+        <button class="btn-3d key key-number" onclick="number('6')">6</button>
+        <button class="btn-3d key key-operator" onclick="operator('-')">−</button>
+
+        <button class="btn-3d key key-number" onclick="number('1')">1</button>
+        <button class="btn-3d key key-number" onclick="number('2')">2</button>
+        <button class="btn-3d key key-number" onclick="number('3')">3</button>
+        <button class="btn-3d key key-operator" onclick="operator('+')">+</button>
+
+        <button class="btn-3d key key-number key-wide" onclick="number('0')">0</button>
+        <button class="btn-3d key key-number" onclick="number('.')">.</button>
+        <button class="btn-3d key key-equals" onclick="equals()">=</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let displayValue = '0';
+    let expression = '';
+    let theme = localStorage.getItem('calc-theme') || 'dark';
+
+    document.body.className = theme;
+
+    function updateDisplay() {
+      document.getElementById('display').textContent = displayValue;
+    }
+
+    function toggleTheme() {
+      theme = theme === 'dark' ? 'light' : 'dark';
+      document.body.className = theme;
+      localStorage.setItem('calc-theme', theme);
+
+      const moonIcon = document.getElementById('icon-moon');
+      const sunIcon = document.getElementById('icon-sun');
+
+      if (theme === 'dark') {
+        moonIcon.style.display = 'block';
+        sunIcon.style.display = 'none';
+      } else {
+        moonIcon.style.display = 'none';
+        sunIcon.style.display = 'block';
+      }
+    }
+
+    function number(num) {
+      if (displayValue === '0') {
+        displayValue = num;
+      } else {
+        displayValue += num;
+      }
+      updateDisplay();
+    }
+
+    function operator(op) {
+      expression += displayValue + op;
+      displayValue = '0';
+    }
+
+    function clear() {
+      displayValue = '0';
+      expression = '';
+      updateDisplay();
+    }
+
+    function backspace() {
+      displayValue = displayValue.length > 1 ? displayValue.slice(0, -1) : '0';
+      updateDisplay();
+    }
+
+    function equals() {
+      try {
+        const fullExpr = expression + displayValue;
+        const sanitized = fullExpr.replace(/[^0-9+\-*/().%]/g, '');
+        const result = Function('"use strict"; return (' + sanitized + ')')();
+        displayValue = result.toString();
+        expression = '';
+        updateDisplay();
+      } catch {
+        displayValue = 'Error';
+        updateDisplay();
+        setTimeout(() => {
+          displayValue = '0';
+          updateDisplay();
+        }, 1000);
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (/[0-9.]/.test(e.key)) {
+        number(e.key);
+      } else if (['+', '-', '*', '/'].includes(e.key)) {
+        operator(e.key);
+      } else if (e.key === 'Enter') {
+        equals();
+      } else if (e.key === 'Backspace') {
+        backspace();
+      } else if (e.key === 'Escape') {
+        clear();
+      }
+    });
+  </script>
+</body>
+</html>
