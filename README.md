@@ -1,7 +1,10 @@
 🧮 TechSolve – Advanced Multi-Mode 3D Calculator
 
 TechSolve is a modern, interactive, and theme-adaptive calculator built to solve more than just basic arithmetic. Designed with advanced UI/UX principles, 3D tactile buttons, and multiple calculation modes, TechSolve brings power, style, and precision together in one tool.
+🌐 Live Demo
 
+Try the calculator here:
+👉 https://multimode-3d-calcula-a5i7.bolt.host/
 🚀 Features
 ✅ Multi-Mode Smart Calculator
 Mode	Description
